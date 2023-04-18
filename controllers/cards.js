@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const { handleError } = require('../utils/index');
-const { CREATED_201, BAD_REQUEST_400 } = require('../constants/constants');
+const { CREATED_201, NOT_FOUND_404 } = require('../constants/constants');
 
 const getAllCards = async (_, res) => {
   try {
@@ -16,6 +16,10 @@ const deleteCard = async (req, res) => {
 
   try {
     const card = await Card.findByIdAndRemove(id).populate(['owner', 'likes']);
+    if (!card) {
+      res.status(NOT_FOUND_404).send({ message: 'Карточки с таким id не существует' });
+      return;
+    }
     res.send(card);
   } catch (err) {
     handleError(res, err);
@@ -46,7 +50,7 @@ const likeSwitch = async (req, res) => {
       { new: true },
     ).populate(['owner', 'likes']);
     if (!card) {
-      res.status(BAD_REQUEST_400).send({ message: 'Карточка не найдена' });
+      res.status(NOT_FOUND_404).send({ message: 'Карточка не найдена' });
       return;
     }
     res.send(card);

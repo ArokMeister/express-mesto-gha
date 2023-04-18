@@ -4,7 +4,7 @@ const {
 } = require('../constants/constants');
 
 const handleError = (res, err, defMessage = 'Ошибка') => {
-  const resError = { message: `${defMessage}: ${err.errors.name.message}` };
+  const resError = { message: `${defMessage}: ${Object.values(err.errors).map((error) => error.message).join(' ')}` };
   if (err instanceof mongooseError.CastError || err instanceof mongooseError.ValidationError) {
     res.status(BAD_REQUEST_400).send(resError);
     return;

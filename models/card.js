@@ -4,8 +4,8 @@ const cardSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Имя карточки не передано'],
-    minlength: 2,
-    maxlength: 30,
+    minlength: [2, 'Минимальная длина имени карточки 2 символа'],
+    maxlength: [30, 'Максимальная длина имени карточки 30 символа'],
   },
   link: {
     type: String,

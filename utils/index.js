@@ -1,6 +1,6 @@
 const mongooseError = require('mongoose').Error;
 const {
-  BAD_REQUEST_400, SERVER_ERROR_500, NOT_FOUND_404,
+  BAD_REQUEST_400, SERVER_ERROR_500,
 } = require('../constants/constants');
 
 const handleError = (res, err, defMessage = 'Ошибка') => {
@@ -11,7 +11,7 @@ const handleError = (res, err, defMessage = 'Ошибка') => {
     return;
   }
   if (err instanceof mongooseError.CastError) {
-    res.status(NOT_FOUND_404).send(textError);
+    res.status(BAD_REQUEST_400).send(textError);
     return;
   }
   if (err instanceof Error) {

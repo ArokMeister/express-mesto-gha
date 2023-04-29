@@ -23,6 +23,9 @@ async function login(req, res, next) {
 async function getAllUsers(_, res, next) {
   try {
     const users = await User.find({});
+    if (users.length === 0) {
+      throw new NotFoundError('Пользователей нет');
+    }
     res.send({ users });
   } catch (err) {
     next(err);

@@ -66,12 +66,12 @@ const likeSwitch = async (req, res, next) => {
   }
 };
 
-const setLike = (req, res) => {
-  likeSwitch(req, res);
+const setLike = (req, res, next) => {
+  likeSwitch(req, res, next);
 };
 
-const deleteLike = (req, res) => {
-  likeSwitch(req, res);
+const deleteLike = (req, res, next) => {
+  likeSwitch(req, res, next);
 };
 
 module.exports = {

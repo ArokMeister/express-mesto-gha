@@ -10,9 +10,6 @@ async function login(req, res, next) {
 
   try {
     const user = await User.findUserByCredentials(email, password);
-    if (!user) {
-      throw new UnauthorizedError('Неправильные почта или пароль');
-    }
     const payload = { _id: user._id };
     const token = generateToken(payload);
     res
@@ -24,8 +21,8 @@ async function login(req, res, next) {
 }
 
 async function getAllUsers(_, res, next) {
-  const users = await User.find({});
   try {
+    const users = await User.find({});
     res.send({ users });
   } catch (err) {
     next(err);
@@ -51,8 +48,8 @@ async function getMe(req, res, next) {
   const { _id } = req.user;
   try {
     const user = await User.findById(_id);
-    if (!user) {
-      throw new UnauthorizedError('С токеном что-то не так');
+    if (!_id) {
+      throw new UnauthorizedError('Необходима авторизация');
     }
     res.send({ user });
   } catch (err) {
@@ -77,12 +74,12 @@ async function createUser(req, res, next) {
   }
 }
 
-async function updatePartUserInfo(req, res, userData, next) {
+async function updateUserInfo(req, res, next) {
   const { _id } = req.user;
   try {
     const user = await User.findByIdAndUpdate(
       _id,
-      userData,
+      req.body,
       { new: true, runValidators: true },
     );
     res.send(user);
@@ -91,22 +88,11 @@ async function updatePartUserInfo(req, res, userData, next) {
   }
 }
 
-function updateUser(req, res, next) {
-  const { name, about } = req.body;
-  updatePartUserInfo(req, res, { name, about }, next);
-}
-
-function updateAvatar(req, res, next) {
-  const { avatar } = req.body;
-  updatePartUserInfo(req, res, { avatar }, next);
-}
-
 module.exports = {
   login,
   getMe,
   createUser,
   getUser,
   getAllUsers,
-  updateUser,
-  updateAvatar,
+  updateUserInfo,
 };

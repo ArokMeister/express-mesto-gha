@@ -1,6 +1,6 @@
 const userRouter = require('express').Router({ credentials: 'include' });
 const {
-  getUser, getAllUsers, updateUser, updateAvatar, getMe,
+  getUser, getAllUsers, updateUserInfo, getMe,
 } = require('../controllers/users');
 const {
   userInfoValidation, userAvatarValidation, userIdValidation,
@@ -9,7 +9,7 @@ const {
 userRouter.get('/', getAllUsers);
 userRouter.get('/me', getMe);
 userRouter.get('/:id', userIdValidation, getUser);
-userRouter.patch('/me', userInfoValidation, updateUser);
-userRouter.patch('/me/avatar', userAvatarValidation, updateAvatar);
+userRouter.patch('/me', userInfoValidation, updateUserInfo);
+userRouter.patch('/me/avatar', userAvatarValidation, updateUserInfo);
 
 module.exports = userRouter;

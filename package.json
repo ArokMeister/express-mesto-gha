@@ -13,7 +13,7 @@
     "url": "git+https://github.com/ArokMeister/express-mesto-gha.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Denis Shiryaev",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ArokMeister/express-mesto-gha/issues"

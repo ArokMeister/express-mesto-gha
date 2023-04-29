@@ -54,7 +54,7 @@ const likeSwitch = async (req, res, next) => {
   try {
     const card = await Card.findByIdAndUpdate(
       cardId,
-      req.method === 'PUT' ? { $addToSet: { likes: userId } } : { $pull: { likes: userId } },
+      { [req.method === 'PUT' ? '$addToSet' : '$pull']: { likes: userId } },
       { new: true },
     );
     if (!card) {
@@ -66,18 +66,9 @@ const likeSwitch = async (req, res, next) => {
   }
 };
 
-const setLike = (req, res, next) => {
-  likeSwitch(req, res, next);
-};
-
-const deleteLike = (req, res, next) => {
-  likeSwitch(req, res, next);
-};
-
 module.exports = {
   getAllCards,
   deleteCard,
   createCard,
-  setLike,
-  deleteLike,
+  likeSwitch,
 };

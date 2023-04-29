@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { patternLink } = require('../constants/constants');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -10,6 +11,11 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: [true, 'Ссылка на карточку не передана'],
+    validate: {
+      validator(values) {
+        return patternLink.test(values);
+      },
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

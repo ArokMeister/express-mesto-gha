@@ -1,7 +1,7 @@
 const { celebrate, Joi } = require('celebrate');
 const { patternLink } = require('../../constants/constants');
 
-const userDataValidation = celebrate({
+const userRegisterValidation = celebrate({
   body: Joi.object({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
@@ -11,27 +11,35 @@ const userDataValidation = celebrate({
   }),
 });
 
+const userLoginValidation = celebrate({
+  body: Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+});
+
 const userInfoValidation = celebrate({
   body: Joi.object({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
+    about: Joi.string().min(2).max(30).required(),
   }),
 });
 
 const userAvatarValidation = celebrate({
   body: Joi.object({
-    avatar: Joi.string().pattern(patternLink),
+    avatar: Joi.string().pattern(patternLink).required(),
   }),
 });
 
 const userIdValidation = celebrate({
   params: Joi.object({
-    id: Joi.string().alphanum().length(24),
+    id: Joi.string().hex().length(24),
   }),
 });
 
 module.exports = {
-  userDataValidation,
+  userRegisterValidation,
+  userLoginValidation,
   userInfoValidation,
   userAvatarValidation,
   userIdValidation,

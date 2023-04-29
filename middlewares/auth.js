@@ -1,12 +1,11 @@
+const UnauthorizedError = require('../utils/customError/UnauthorizedError');
 const { checkToken } = require('../utils/token');
-const { UNAUTHORIZED_401 } = require('../constants/constants');
 
 const auth = (req, res, next) => {
   const token = req.cookies.jwt;
   const validateToken = checkToken(token);
   if (!validateToken) {
-    res.status(UNAUTHORIZED_401).send({ message: 'Доступ запрещен. Необходима авторизация' });
-    return;
+    throw new UnauthorizedError('Доступ запрещен. Необходима авторизация');
   }
   req.user = validateToken;
   next();

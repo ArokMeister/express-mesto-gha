@@ -1,6 +1,6 @@
 const mongooseError = require('mongoose').Error;
 const {
-  BAD_REQUEST_400, SERVER_ERROR_500, UNAUTHORIZED_401, NOT_FOUND_404, FORBIDDEN_ERROR_403,
+  BAD_REQUEST_400, SERVER_ERROR_500, UNAUTHORIZED_401, NOT_FOUND_404, FORBIDDEN_403, CONFLICT_409,
 } = require('../constants/constants');
 const ForbiddenError = require('./customError/ForbiddenError');
 const NotFoundError = require('./customError/NotFoundError');
@@ -25,7 +25,11 @@ const handleError = (err, req, res, next) => {
     return;
   }
   if (err instanceof ForbiddenError) {
-    res.status(FORBIDDEN_ERROR_403).send({ message: err.message });
+    res.status(FORBIDDEN_403).send({ message: err.message });
+    return;
+  }
+  if (err.code === 11000) {
+    res.status(CONFLICT_409).send({ message: 'Такой Email уже зарегистрирован' });
     return;
   }
   res.status(SERVER_ERROR_500).send({ message: 'Произошла ошибка на сервере' });

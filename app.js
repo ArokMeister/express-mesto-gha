@@ -1,8 +1,10 @@
 const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
-const userRouter = require('./routes/users');
-const cardRouter = require('./routes/cards');
-const { NOT_FOUND_404 } = require('./constants/constants');
+const { errors } = require('celebrate');
+const cookieParser = require('cookie-parser');
+const router = require('./routes');
+const { handleError } = require('./utils/index');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -12,19 +14,12 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 });
 
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '643ebc1451d1931b0bf0e7e0',
-  };
+app.use(router);
 
-  next();
-});
-
-app.use('/', userRouter);
-app.use('/', cardRouter);
-app.use('*', (_, res) => { res.status(NOT_FOUND_404).send({ message: 'Страница не найдена' }); });
+app.use(errors());
+app.use(handleError);
 
 app.listen(PORT, () => {});

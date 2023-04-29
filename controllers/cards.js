@@ -1,32 +1,40 @@
 const Card = require('../models/card');
-const { handleError } = require('../utils/index');
-const { CREATED_201, NOT_FOUND_404 } = require('../constants/constants');
+const {
+  CREATED_201,
+} = require('../constants/constants');
+const NotFoundError = require('../utils/customError/NotFoundError');
+const ForbiddenError = require('../utils/customError/ForbiddenError');
 
-const getAllCards = async (_, res) => {
+const getAllCards = async (_, res, next) => {
   try {
     const cards = await Card.find({});
     res.send(cards);
   } catch (err) {
-    handleError(res, err);
+    next(err);
   }
 };
 
-const deleteCard = async (req, res) => {
+const deleteCard = async (req, res, next) => {
   const { id } = req.params;
+  const { _id } = req.user;
 
   try {
-    const card = await Card.findByIdAndRemove(id);
+    const card = await Card.findById(id);
+    const cardId = card.owner._id;
     if (!card) {
-      res.status(NOT_FOUND_404).send({ message: 'Карточки с таким id не существует' });
-      return;
+      throw new NotFoundError('Карточки с таким id не существует');
     }
-    res.send(card);
+    if (_id !== cardId) {
+      throw new ForbiddenError('Нельзя удалять чужие карточки');
+    }
+    await Card.findOneAndRemove(id);
+    res.send({ message: 'Карточка удалена' });
   } catch (err) {
-    handleError(res, err);
+    next(err);
   }
 };
 
-const createCard = async (req, res) => {
+const createCard = async (req, res, next) => {
   const { name, link } = req.body;
   const { _id } = req.user;
 
@@ -35,11 +43,11 @@ const createCard = async (req, res) => {
     const card = await makeCard.populate('owner');
     res.status(CREATED_201).send(card);
   } catch (err) {
-    handleError(res, err);
+    next(err);
   }
 };
 
-const likeSwitch = async (req, res) => {
+const likeSwitch = async (req, res, next) => {
   const { id: cardId } = req.params;
   const { _id: userId } = req.user;
 
@@ -50,12 +58,11 @@ const likeSwitch = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      res.status(NOT_FOUND_404).send({ message: 'Карточка не найдена' });
-      return;
+      throw new NotFoundError('Карточка не найдена');
     }
     res.send(card);
   } catch (err) {
-    handleError(res, err);
+    next(err);
   }
 };
 

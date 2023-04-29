@@ -16,18 +16,18 @@ const getAllCards = async (_, res, next) => {
 
 const deleteCard = async (req, res, next) => {
   const { id } = req.params;
-  const { _id } = req.user;
+  const userId = req.user._id;
 
   try {
     const card = await Card.findById(id);
-    const cardId = card.owner._id;
     if (!card) {
-      throw new NotFoundError('Карточки с таким id не существует');
+      throw new NotFoundError('Карточка не найдена');
     }
-    if (_id !== cardId) {
+    const ownerId = card.owner._id.toString();
+    if (userId !== ownerId) {
       throw new ForbiddenError('Нельзя удалять чужие карточки');
     }
-    await Card.findOneAndRemove(id);
+    await Card.findByIdAndRemove(id);
     res.send({ message: 'Карточка удалена' });
   } catch (err) {
     next(err);

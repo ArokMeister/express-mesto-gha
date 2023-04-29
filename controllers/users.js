@@ -1,9 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const UnauthorizedError = require('../utils/customError/UnauthorizedError');
-const {
-  CREATED_201, STATUS_200_OK,
-} = require('../constants/constants');
+const { CREATED_201 } = require('../constants/constants');
 const { generateToken } = require('../utils/token');
 const NotFoundError = require('../utils/customError/NotFoundError');
 
@@ -19,7 +17,6 @@ async function login(req, res, next) {
     const token = generateToken(payload);
     res
       .cookie('jwt', token, { maxAge: (3600000 * 24 * 7), httpOnly: true })
-      .status(STATUS_200_OK)
       .send({ message: 'Авторизация прошла успешно' });
   } catch (err) {
     next(err);
@@ -29,7 +26,7 @@ async function login(req, res, next) {
 async function getAllUsers(_, res, next) {
   const users = await User.find({});
   try {
-    res.status(STATUS_200_OK).send({ users });
+    res.send({ users });
   } catch (err) {
     next(err);
   }

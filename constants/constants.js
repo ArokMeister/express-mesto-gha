@@ -1,7 +1,6 @@
 const http2 = require('http2');
 
 const {
-  HTTP_STATUS_OK: STATUS_200_OK,
   HTTP_STATUS_CREATED: CREATED_201,
   HTTP_STATUS_BAD_REQUEST: BAD_REQUEST_400,
   HTTP_STATUS_INTERNAL_SERVER_ERROR: SERVER_ERROR_500,
@@ -14,7 +13,6 @@ const {
 const patternLink = /^https?:\/\/(?:www\.)?[A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=]+(?:#[A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=]+)?$/m;
 
 module.exports = {
-  STATUS_200_OK,
   CREATED_201,
   BAD_REQUEST_400,
   UNAUTHORIZED_401,

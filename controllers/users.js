@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const UnauthorizedError = require('../utils/customError/UnauthorizedError');
 const { CREATED_201 } = require('../constants/constants');
 const { generateToken } = require('../utils/token');
 const NotFoundError = require('../utils/customError/NotFoundError');
@@ -51,9 +50,6 @@ async function getMe(req, res, next) {
   const { _id } = req.user;
   try {
     const user = await User.findById(_id);
-    if (!_id) {
-      throw new UnauthorizedError('Необходима авторизация');
-    }
     res.send({ user });
   } catch (err) {
     next(err);

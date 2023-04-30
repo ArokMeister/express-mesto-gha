@@ -27,7 +27,7 @@ const deleteCard = async (req, res, next) => {
     if (userId !== ownerId) {
       throw new ForbiddenError('Нельзя удалять чужие карточки');
     }
-    await Card.findByIdAndRemove(id);
+    await Card.deleteOne(card);
     res.send({ message: 'Карточка удалена' });
   } catch (err) {
     next(err);

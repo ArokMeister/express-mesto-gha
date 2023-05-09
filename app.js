@@ -23,7 +23,6 @@ app.use(requestLogger);
 app.use(router);
 
 app.use(errorLogger);
-
 app.use(errors());
 app.use(handleError);
 

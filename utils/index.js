@@ -6,8 +6,6 @@ const ForbiddenError = require('./customError/ForbiddenError');
 const NotFoundError = require('./customError/NotFoundError');
 const UnauthorizedError = require('./customError/UnauthorizedError');
 
-// Спасибо за комментарий на счет обработки ошибок, но пока не совсем понял, как это поправить
-// по предложенному варианту, в ближайшем будующем постараюсь сделать код лучше!
 const handleError = (err, req, res, next) => {
   if (err instanceof mongooseError.ValidationError) {
     const resError = { message: `${Object.values(err.errors).map((error) => error.message).join(' ')}` };

@@ -12,6 +12,10 @@ const handleError = (err, req, res, next) => {
     res.status(BAD_REQUEST_400).send(resError);
     return;
   }
+  if (err instanceof mongooseError.CastError) {
+    res.status(BAD_REQUEST_400).send({ message: 'Ошибка в передаваеммых данных или типе запроса' });
+    return;
+  }
   if (err instanceof UnauthorizedError) {
     res.status(UNAUTHORIZED_401).send({ message: err.message });
     return;
